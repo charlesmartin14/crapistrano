@@ -1,0 +1,490 @@
+# deprec changelog
+
+= 2.2.2  (Jul 15, 2011)
+
+* deprec now provides rake tasks
+
+  Add this to your Rakefile
+
+    require 'deprec/rake'
+
+  or you could even add this to your Gemfile
+
+    gem 'deprec', :require => 'deprec/rake'
+
+= 2.2.0  (Jul 10, 2011)
+
+* First release since rewrite of http://deprec.org
+* Tidy up of various recipes
+* Introduction of deprec:rack namespace
+
+= 2.1.20 (Mar 4, 2011)
+
+* generate apache vhost to current dir if config/ not present
+
+= 2.1.19 (Mar 4, 2011)
+
+* replaced mailx with mailutils
+* cap deprec:apache:vhost # handy vhost generator
+
+= 2.1.18 (Feb 4, 2011)
+
+* bugfix: nagios report plugin execution was not installing
+
+= 2.1.17 (Feb 3, 2011)
+
+* Passenger vhost sets RackEnv and RailsEnv
+* nagios-3.2.3
+
+= 2.1.16 (Jan 13, 2011)
+
+* bugfix: ddt does not require call to 'configure'
+
+= 2.1.15 (Oct 04, 2010)
+
+* deprec:ec2 namespace as a basis for ec2 recipes
+
+= 2.1.14 (Sep 27, 2010)
+
+* daemonize-1.6
+* ree i386 hardy deb package
+
+= 2.1.13 (Sep  17, 2010)
+
+Added syslog_ng recipes
+
+= 2.1.10 (Sep   4, 2010)
+
+* Removed integrity recipes - causing a problem with ruby 1.9.2
+
+= 2.1.10 (Sep  4, 2010)
+
+* Get all user input at start (deprec:users:add)
+
+= 2.1.9 (Sep  4, 2010)
+
+* Added syslog-ng
+* Added stunnel
+* Added external config options for deprec:users:add
+* Added config variables to sshd_config template
+* Added recipe to push out file with bash options I want everywhere
+* deprec:users:add looks harder for your public ssh keys
+* current_user now contains the output from `whois`
+
+= 2.1.8 (Aug 26, 2010)
+ 		
+* nagios-3.2.1
+* nagios-plugins-1.4.15
+
+= 2.1.7 (July 4, 2010)
+ 		
+* ruby-enterprise-1.8.7-2010.02 [jgrevich]
+
+= 2.1.6 (Mar  3, 2009)
+
+* monit-5.1.1
+* haproxy-1.4.0
+
+= 2.1.5 (Dec  3, 2009)
+
+* collectd-4.8.1
+* haproxy-1.3.22
+* monit-5.0.3
+* don't install vim-full as it installs gnome
+
+= 2.1.4 (Sep 16, 2009)
+
+* rubygems-1.3.5 
+* git-1.6.4.3 
+
+= 2.1.2 (Aug 26, 2009)
+
+* Better support for Capistrano multistage
+  Look for database.yml in config/#{stage}/database.yml
+
+= 2.1.1 (Aug 25, 2009)
+
+* Added haproxy
+
+= 2.1.0 (Aug 24, 2009)
+
+* Added Collectd
+* Added Syslog
+* Updated Nagios to 3.2.0
+
+== 2.0.15 (August 10, 2009)
+
+* Moved apache logs for vhosts into /var/log/apache2 (override by setting :apache_log_dir)
+
+== 2.0.14 (August 10, 2009)
+
+* Added logrotate config for passenger
+
+== 2.0.13 (July 5, 2009)
+
+* Bugfix: updated url for REE (old one went away)
+
+== 2.0.12 (June 24, 2009)
+
+* Updated chef recipes
+
+== 2.0.11 (June 19, 2009)
+
+* Security update: ruby-1.8.7-p174
+
+== 2.0.10 (June 14, 2009)
+
+* Added CouchDB
+* Added Chef
+* Fixed Passenger gem version problem (permanently!) [gfairbrother]
+* Updated ree version to ruby-enterprise-1.8.6-20090610
+
+== 2.0.9 (April 14, 2009)
+
+* Use passenger-2.1.3
+
+* Added support for Capistrano multistage. Generated config files will be 
+  have a directory with the stage name prefixed to their local path.
+
+  e.g. mbailey$ cap production deprec:monit:config_gen
+
+  [done] config/production/monit/etc/init.d/monit written
+  [done] config/production/monit/etc/monitrc written
+  [done] config/production/monit/etc/monit.d/nothing written
+
+== 2.0.8 (March 17, 2009)
+
+* :config task now renders configs directly to remote server if locally 
+  rendered versions (from :config_gen task) do not exist.
+
+== 2.0.7 (March 17, 2009)
+
+* bugfix
+
+== 2.0.6 (March 17, 2009)
+
+* Added option to create ~/.caprc file.  run 'depify -c'
+
+== 2.0.5 (March 17, 2009)
+
+* Added recipes and config templates for Integrity ci. http://integrityapp.com/
+* bugfix: need to enable apache mods on install
+
+== 2.0.4 (March 16, 2009)
+
+* bugfix - updated Passenger version number
+
+== 2.0.3 (March 3, 2009)
+
+* bugfix - can't set ownership of environment.rb before deploy!
+
+== 2.0.2 (March 3, 2009)
+
+* Change owner of config/environment.rb to the value of app_user after deploy
+  so Passenger will run app as this user [mbailey]
+
+* bugfix: set homedir for app_user account to value of deploy_to. 
+  Passenger complains if homedir for user it runs as doesn't exist. [mbailey]
+
+* Run the database rake tasks on the app server, not the db server. [mbailey]
+  e.g. cap deprec:database:schema_load
+
+* Updated to ruby-enterprise-1.8.6-20090201
+
+* Scan for ssh public key if not provided locally
+
+
+== 2.0.1 (February 20, 2009)
+
+Newly created ~/.caprc does not load Rails recipes.
+
+This solves the problem of Capistrano's default deploy tasks
+having 'before' and 'after' tasks added when you're deploying
+a project that isn't setup to use deprec.
+
+Existing users can update their existing ~/.caprc, replacing:
+
+    require 'deprec'
+
+with:
+
+    require 'deprec_minus_rails'
+
+== 2.0.0 (February 14, 2009)
+
+* Official deprec-2.0 Rubyforge release!
+ 
+== 1.99.34 (February  6, 2009)
+
+* Bugfix: restricted some tasks to certain roles
+
+== 1.99.33 (February  5, 2009)
+
+# Added options for :web, :app, :db and :ruby software to install/use.
+#
+# Newly generated deploy.rb files specify Passenger, Apache and Ruby Enterprise 
+# Edition. If not specified, deprec defaults to Mongrel, Nginx and Ruby-1.8.7.
+# This is so that existing users of deprec2 previews will not be affected.
+
+* Added :ruby_vm_type option to choose between :mri and :ree Ruby versions
+
+* Added :app_server_type
+  :passenger [set in new deploy.rb]
+  :mongrel   [default if not set]
+
+* Added :web_server_type 
+  :apache [set in new depoy.rb] (for :mongrel or :passenger apps)
+  :nginx  [default if not set]  (for :mongrel apps) 
+
+* Added :db_server_type
+  :mysql [default]
+  :postgresql
+  :sqlite
+
+# Other additions
+
+* cap deprec:rails:setup_database
+
+  Creates database and user for Rails app using data from database.yml.
+  Respects value of :db_server_type
+
+* Postgresql recipes [Eric Harris-Braun]
+
+* Starling Recipes [Rob Caporetto]
+
+* cap deprec:utils:handy 
+
+    Installs a bunch of handy utils I can't live without:
+
+    lynx nmap netcat telnet dnsutils rsync curl wget mailx mutt vim-full tree
+
+* Updated Apache vhost template for mongrel. Supports https and puts in dummy
+  certificate. Useful settings are:
+
+  set :apache_ssl_enabled, true
+  set :apache_ssl_forward_all, true
+
+== 1.99.30 (November 28, 2008)
+
+* Bugfix: use current_path for passenger_root
+
+== 1.99.29 (November 28, 2008)
+
+* Bugfix: deprec:passenger:install_deps was commented out for testing
+
+== 1.99.28 (November 26, 2008)
+
+* Added support for Phusion Passenger (http://www.modrails.com/) [mbailey]
+
+* Restricted tasks to roles. [mbailey]
+  http://github.com/mbailey/deprec/commit/d103dda7ee3f7696007d230c76c7739dd57115ec
+
+* Extend capistrano_extensions.rb to allow install from git sources. [jasherai]
+
+* Updated git to 1.6.0.1 [thornysun]
+ 
+== 1.99.27 (August 27, 2008)
+
+* Bugfix: Add configure and make options to src_package for rubygems to 
+  override defaults. [jasherai]
+
+* Change: We now setup postfix as a satellite mail server. This is designed 
+  to listen only on the local network interface and non-local mail to a relay
+  host. [mbailey]
+
+== 1.99.26 (August 22, 2008)
+
+* added vnstat recipes - measure and report traffic on interface counters [mbailey]
+* upgrade ruby to 1.8.6-p287 [Isaac Kearse] 
+* upgrade to rubygems 1.2.0 - addresses memory utilization issues on
+  low-memory boxes (half-gig or less) [thewoolleyman]
+* deprec:rails:install_stack now installs mysql  [mbailey]
+* turned tcp_nopush back on [mbailey]
+* Correctly handle tarballs with .tgz extension [mbailey]
+* Generate default remote config on install [mbailey]
+
+== 1.99.24 (July  7, 2008)
+
+* I've rejigged things to make it easier to install a service without having
+  a local config directory. For example:
+
+  cap deprec:nginx:install HOSTS=192.168.0.10  
+
+  This will download and compile nginx, and push out a config file without 
+  generating a local copy. You don't need a config/ dir and you don't need 
+  to have defined a :web role.
+
+  Meta-tasks (like deprec:rails:install_stack) can now pass a block of commands 
+  to with_roles(roles).
+
+  config_gen and config are still available but it's now possible to install 
+  a rails stack without generating any local files. 
+
+== 1.99.21 (June 17, 2008)
+
+* added recipes and config templates for ar_sendmail
+* added gitosis support
+* added deprec:xen:migrate for "manually" moving slice between hosts
+
+== 1.99.20 (June 3, 2008)
+
+* added git support: install git, manage ssh users and create remote repositories
+
+== 1.99.19 (June 3, 2008)
+
+* feature: added logrotate. configs generated for nginx and mongrel
+* bugfix: monit:install was calling monit:activate but this won't work will monit:config is called. 
+
+== 1.99.18 (May  28, 2008)
+
+* bugfix: nagios config option was not being set till after required
+
+== 1.99.17 (May  22, 2008)
+
+* monit config for mongrel now lives under config/mongrel instead of config/monit
+  This way, monit configs for services can live with the recipes/templates for that service.
+
+== 1.99.16 (May  5, 2008)
+
+* change: start mongrel using mongrel_cluster with --clean option so mongrel 
+  will start even when there are stale pids around.
+
+* bugfix: nginx vhost template now uses :mongrel_port instead of 8000
+
+
+== 1.99.15 (Mar 27, 2008)
+
+* moved vmbuilder_plugins out of deprec dir 
+
+== 1.99.14 (Feb 21, 2008)
+
+* monit template now uses :mongrel_port instead of 8000
+
+== 1.99.11 (Feb 21, 2008)
+
+* enabled evented mongrel
+* enhancement: updated how allowed hosts are generated
+* bugfix: remove nginx index.html
+
+== 1.99.8 (Feb 18, 2008)
+
+* enhancement: added nginx_client_max_body_size setting for nginx rails vhost
+* bugfix: monit config was broken
+
+== 1.99.7 (Feb 18, 2008)
+
+* enhancement: nginx vhost config now serves up assetX.hostname.com
+* enhancement: deprec:db:schema_load is nicer than running migration initially
+
+== 1.99.6 (Feb 15, 2008)
+
+* bugfix: fixed monit support [Mike Bailey]
+
+* bugfix: Mongrel wasn't starting when server rebooted. [Mike Bailey]
+
+* bugfix: Fixed .caprc content [Mike Bailey]
+
+== 1.99.5 (Feb 12, 2008)
+
+* feature: installs and configures monit to manage your mongrel processes [Mike Bailey]
+
+* feature: When running config_gen,  if deprec discovers a file exists, checks 
+           whether the new file differs from the existing one. If they're 
+           identical, it skips it.
+
+		   If they differ, the user is presented with the options to overwrite 
+		   or not but now there's an extra option to view a diff of the changes 
+		   that would occur. [Mike Bailey]
+
+* change:  handle_command_with_input now accepts an optional response parameter.
+           This is useful if you need to change a password on many servers and 
+           don't want to have to keep entering the password at the prompt for
+           each box. [Mike Bailey]
+
+== 1.99.4 (Feb 11, 2008)
+
+* Bugfix: set correct path to templates [Mike Bailey]
+
+deprec changelog (check the timeline at http://trac.deprecated.org/trac.cgi/timeline)
+
+== 1.10.0
+Massive changes in preparation for 2.0
+
+== 1.8.0
+
+* fixed scm_setup. it parses :repository if set and prompts user for values if not [Mike Bailey]
+* added "role :scm, domain" to generated deploy.rb [Mike Bailey]
+* added :trac_install, :trac_setup, :trac_start, :trac_stop  [Mike Bailey]
+* added :change_root_password and :change_root_password_as_root [Mike Bailey]
+* moved templates dir [Mike Bailey]
+* bugfix :db_setup now re-runnable
+
+== 1.7.1
+
+* bugfix: setup_ssh_keys() - print message and exit if ssh_options[:keys] not set [Mike Bailey]
+
+== 1.7.0
+
+* new tasks :install_memcached, :memcached_start, :memcached_stop, :memcached_restart [Mike Bailey]
+* set default shell to '/bin/bash' for new users [Mike Bailey]
+* bugfix: set default values for mongrel_user and mongrel_group [Mike Bailey]
+
+== 1.6.0
+
+* new task :install_php installs php-5.2.2 [Mike Bailey]
+
+== 1.5.1
+
+* bugfix: fixed bug in su_put that was causing Windows [Mike Bailey]
+
+== 1.5.0
+
+* bugfix: :set_perms_for_mongrel_dirs [Mike Bailey]
+  - now don't fail if log files do not exist (e.g initial deployment)
+  - is called by :after_symlink task instead of :after_update 
+    this is because some tasks call :update_code without calling the 
+    :update task but in all of these cases :symlink is called 
+
+* updated version from 1.4.x to 1.5.x due to pretty big change made
+  in previous version (mongrel no longer running as root) [Mike Bailey]
+
+== 1.4.2
+
+* change: mongrel no longer runs as root for security reasons [Mike Bailey]
+* bugfix: install apache version 2.2.4 as previous version is no longer on their webserver [Mike Bailey]
+* bugfix: fixed install_rubygems so install_rails_stack no longer fails when first run [Mike Bailey]
+
+== 1.4.0
+
+* renamed svn commands and made svn_create_repos re-runable [Mike Bailey]
+* bugfix: Wildcard Apache NameVirtualHosts directive used be used just once [Mike Bailey]
+
+== 1.3.1
+
+* bugfix
+
+== 1.3.0
+
+* added md5sum checking to deprec.download_src [Mike Bailey]
+* new function: deprec.mkdir(path, mode=0755, group=nil, user=nil) [Mike Bailey]
+* start apache and mongrel on server boot [Mike Bailey]
+* removed deprec_dotfiles script as the Cap code it patches is now in Capistrano source. [Mike Bailey]
+* changed from LGPG to GPL licence. [Mike Bailey]
+
+== 1.2.2
+
+* Added enable_multiverse(), disable_multiverse() tasks for ubuntu package management [Mike Bailey]
+* Removed termios as a gem requirement as it doesn't work on Windows [Mike Bailey]
+
+== 1.2.1
+
+* Updated railsmachine code to include SSL fix from new release [Mike Bailey]
+
+== 1.2.0
+
+* Added run_with_input and sudo_with_input for interactive tasks. [topfunky]
+* Added sudo_stream for piping the output of a privileged command like the built-in stream() [topfunky]
+* svn_cache_credentials task does an interactive svn list to make http-based repository deployments easier. [topfunky]
+* Alternate deprec/recipes/cache_svn task overrides the built-in update_code task with a more efficient version. [topfunky]
+
+

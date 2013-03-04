@@ -1,0 +1,6 @@
+I could not get my gem path to override deprec, so until this is fixed
+
+1.  I installed deprec in the RVM place, BUT
+1.a I replaced lib with a symlink
+1.b I remove deprec frm the rvm gem cache
+

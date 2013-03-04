@@ -1,0 +1,26 @@
+
+# dont use .. I was hacking to figure it out
+#  chm 26-jul-2012
+#
+<VirtualHost *:80>
+    ServerName <%= "#{instance_ip}" %>
+    DocumentRoot /var/www/htdocs
+   
+    <Directory /var/www/htdocs>
+        Allow from all
+        Options -MultiViews
+    </Directory>
+
+    RackBaseURI /rack
+    <Directory /var/www/htdocs/rack>
+        Allow from all
+        Options -MultiViews        
+    </Directory>       
+</VirtualHost>
+
+
+#NameVirtualHost *:80
+ 
+<IfModule mod_ssl.c>
+  NameVirtualHost *:443
+</IfModule>

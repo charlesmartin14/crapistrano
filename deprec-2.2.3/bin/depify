@@ -1,0 +1,144 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+def unindent(string)
+  indentation = string[/\A\s*/]
+  string.strip.gsub(/^#{indentation}/, "")
+end
+
+
+caprc = unindent(<<-FILE)
+  # .caprc - Capistrano configs (added by deprec gem [www.deprec.org])
+  #
+  # Include settings that you want active whenever you use Capistrano
+  # You can over ride these for particular projects by putting entries
+  # into Capfile or deploy.rb for those projects
+  #
+  # Uncomment any of the following entries to enable them.
+  
+  # Include deprec - deployment recipes for Capistrano (www.deprec.org)
+  #
+  # This loads all recipes minus the ones in rails.rb
+  # The recipes in rails.rb add 'before' and 'after' tasks to
+  # some of the builtin cap deploy tasks which are not appropriate
+  # for deploying a project that isn't setup to use deprec.
+  #
+  require 'deprec_minus_rails'
+
+  # This fixes the following problem on Ubuntu Lucid (and others?)
+  #  'sudo: no tty present and no askpass program specified'
+  #
+  default_run_options[:pty] = true 
+
+FILE
+
+files = {
+  "Capfile" => unindent(<<-FILE),
+    load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+    Dir['vendor/plugins/*/recipes/*.rb'].each { |plugin| load(plugin) }
+    Dir['config/*/recipes.rb'].each { |plugin| load(plugin) }
+    load 'config/deploy'
+  FILE
+
+  "config/deploy.rb" => unindent(<<-FILE),
+    require 'deprec'
+  
+    set :application, "set your application name here"
+    set :domain, "set domain name project will be served on here"
+    set :repository,  "git://github.com/\#{user}/\#{application}.git"
+    
+    # If you aren't using Subversion to manage your source code, specify
+    # your SCM below:
+    set :scm, :git
+   
+    set :ruby_vm_type,      :ree        # :ree, :mri
+    set :web_server_type,   :apache     # :apache, :nginx
+    set :app_server_type,   :passenger  # :passenger, :mongrel
+    set :db_server_type,    :mysql      # :mysql, :postgresql, :sqlite
+    
+    # set :packages_for_project, %w(libmagick9-dev imagemagick libfreeimage3) # list of packages to be installed
+    # set :gems_for_project, %w(rmagick mini_magick image_science) # list of gems to be installed
+    
+    # Update these if you're not running everything on one host.
+    role :app, domain
+    role :web, domain
+    role :db,  domain, :primary => true, :no_release => true
+
+    # If you aren't deploying to /opt/apps/\#{application} on the target
+    # servers (which is the deprec default), you can specify the actual location
+    # via the :deploy_to variable:
+    # set :deploy_to, "/opt/apps/\#{application}"
+    
+    namespace :deploy do
+      task :restart, :roles => :app, :except => { :no_release => true } do
+        top.deprec.app.restart
+      end
+    end
+    
+  FILE
+}
+
+def create_file(file, content)
+  if !File.exists?(File.dirname(file))
+    puts "[add] creating directory `#{File.dirname(file)}'"
+    Dir.mkdir(File.dirname(file))
+  end
+  if File.exists?(file)
+    warn "[skip] `#{file}' already exists"
+  elsif File.exists?(file.downcase)
+    warn "[skip] `#{file.downcase}' exists, which could conflict with `#{file}'"
+  else
+    puts "[add] writing `#{file}'"
+    File.open(file, "w") { |f| f.write(content) }
+  end
+end
+
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($0)} [path]"
+
+  opts.on("-c", "Install ~/.caprc file") do
+    create_file(File.join(ENV['HOME'], '.caprc'), caprc)
+    exit 0
+  end
+  
+  opts.on("-h", "--help", "Displays this help info") do
+    puts opts
+    exit 0
+  end
+  
+  begin
+    opts.parse!(ARGV)
+  rescue OptionParser::ParseError => e
+    warn e.message
+    puts opts
+    exit 1
+  end
+end
+
+if ARGV.empty?
+  abort "Please specify the directory to depify, e.g. `#{File.basename($0)} .'"
+elsif !File.exists?(ARGV.first)
+  abort "`#{ARGV.first}' does not exist."
+elsif !File.directory?(ARGV.first)
+  abort "`#{ARGV.first}' is not a directory."
+elsif ARGV.length > 1
+  abort "Too many arguments; please specify only the directory to capify."
+end
+
+create_file(File.join(ENV['HOME'], '.caprc'), caprc)
+
+base = ARGV.shift
+config_dir = File.join(base,'config')
+if File.directory?(config_dir)
+  files.each do |file, content|
+    create_file(File.join(base, file), content)
+  end
+else
+  warn "[warn] directory `#{config_dir}' does not exist"
+  warn "[skip] '#{base}/Capfile'"
+  warn "[skip] '#{base}/config/deploy.rb'"
+end
+
+puts "[done] depified!"

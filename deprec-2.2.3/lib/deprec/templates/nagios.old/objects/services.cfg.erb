@@ -1,0 +1,165 @@
+###############################################################################
+###############################################################################
+#
+# SERVICE GROUPS
+#
+###############################################################################
+###############################################################################
+
+define servicegroup{
+        servicegroup_name               disk
+}
+
+define servicegroup{
+        servicegroup_name               memory
+}
+define servicegroup{
+        servicegroup_name               cpu
+}
+
+
+###############################################################################
+###############################################################################
+#
+# SERVICES
+#
+###############################################################################
+###############################################################################
+
+define service {
+    use     				generic-service ; Name of service template to use
+    hostgroup_name  		servers
+    service_description     SSH
+    check_command   		check_ssh
+}
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	service_description Memory 
+	servicegroups memory
+	check_command check_nrpe!check_memory 
+}
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	service_description Swap 
+	servicegroups memory
+	check_command check_nrpe!check_swap
+	notifications_enabled   0
+}
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	service_description CPU 
+	check_command check_nrpe!check_load 
+} 
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	servicegroups disk
+	service_description Disk 
+	check_command check_nrpe!check_xvda2
+}
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	service_description NTP Time 
+	check_command check_nrpe!check_ntp_time 
+}
+
+define service{ 
+	use generic-service 
+	hostgroup_name servers 
+	service_description DNS 
+	check_command check_dns
+}
+
+# define service {
+#    use     				generic-service ; Name of service template to use
+#    hostgroup_name  		mail
+#    service_description  postfix smtp
+#    check_command   		check_nrpe!check_postfix_satellite
+# }
+# 
+# define service{ 
+# 	use generic-service 
+# 	hostgroup_name mysql_servers
+# 	service_description Mysql 
+# 	check_command check_nrpe!check_mysql
+# }
+
+# Check requests per second to Apache (via collectd)
+#
+# define service{ 
+#   use generic-service 
+#   host_name localhost
+#   service_description apache_requests 
+#   normal_check_interval           1
+#   retry_check_interval            1
+#   check_command check_apache_requests!www.example.com!10!20
+# }
+
+# Check URl is responding
+# 
+# define service{ 
+#   use generic-service 
+#   host_name example_host 
+#   service_description www.example.com 
+#   check_command check_url!www.example.com!http:\/\/www.example.com/some/path
+#   notifications_enabled   1
+# }
+
+
+###############################################################################
+###############################################################################
+#
+# SERVICE TEMPLATES
+#
+###############################################################################
+###############################################################################
+
+# Generic service definition template - This is NOT a real service, just a template!
+
+define service{
+        name                            generic-service 	; The 'name' of this service template
+        active_checks_enabled           1       		; Active service checks are enabled
+        passive_checks_enabled          1    		   	; Passive service checks are enabled/accepted
+        parallelize_check               1       		; Active service checks should be parallelized (disabling this can lead to major performance problems)
+        obsess_over_service             1       		; We should obsess over this service (if necessary)
+        check_freshness                 0       		; Default is to NOT check service 'freshness'
+        notifications_enabled           1       		; Service notifications are enabled
+        event_handler_enabled           1       		; Service event handler is enabled
+        flap_detection_enabled          1       		; Flap detection is enabled
+        failure_prediction_enabled      1       		; Failure prediction is enabled
+        process_perf_data               1       		; Process performance data
+        retain_status_information       1       		; Retain status information across program restarts
+        retain_nonstatus_information    1       		; Retain non-status information across program restarts
+        is_volatile                     0       		; The service is not volatile
+        check_period                    24x7			; The service can be checked at any time of the day
+        max_check_attempts              3			; Re-check the service up to 3 times in order to determine its final (hard) state
+        normal_check_interval           10			; Check the service every 10 minutes under normal conditions
+        retry_check_interval            2			; Re-check the service every two minutes until a hard state can be determined
+        contact_groups                  admins			; Notifications get sent out to everyone in the 'admins' group
+	notification_options		w,u,c,r			; Send notifications about warning, unknown, critical, and recovery events
+        notification_interval           60			; Re-notify about service problems every hour
+        notification_period             24x7			; Notifications can be sent out at any time
+         register                        0       		; DONT REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+        }
+
+# Local service definition template - This is NOT a real service, just a template!
+
+define service{
+		name				local-service 		; The name of this service template
+		use				generic-service		; Inherit default values from the generic-service definition
+	        max_check_attempts              4			; Re-check the service up to 4 times in order to determine its final (hard) state
+	        normal_check_interval           5			; Check the service every 5 minutes under normal conditions
+	        retry_check_interval            1			; Re-check the service every minute until a hard state can be determined
+	        register                        0       		; DONT REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+		}
+			
+

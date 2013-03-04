@@ -1,0 +1,10 @@
+# memcached.conf  ERB
+
+MEMCACHED_BINARY=<%= memcached_bin %> 
+MEMUSAGE=<%= memcached_memory %>
+MEMCACHED_RUNAS="memcached"
+MAXCONN=<%= memcached_max_connections %>
+LISTENON=<%= memcached_ip %>
+PORT=<%= memcached_port %>
+UDPPORT="${PORT}"
+PIDBASE="/var/run/memcached/memcached"

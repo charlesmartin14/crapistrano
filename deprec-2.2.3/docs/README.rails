@@ -1,0 +1,23 @@
+Install Ruby on Rails app with deprec
+=====================================
+
+The rack recipes should work with any rack app.
+
+*Quickstart*
+
+    $ cap deprec:rack:install_stack
+
+    $ cd your_rails_app
+    $ depify . 
+    # Edit config/deploy.rb and config/deploy/uat.rb
+
+    # WARNING! Don't run the following command if you are using a shared 
+    # database server that has already been installed.
+    $ cap deprec:db:install 
+
+    $ cap deploy:setup HOSTS=mbailey@uat
+
+    $ cap deprec:rack:config HOSTS=mbailey@uat
+
+    # ssh to git@github.com from uat and accept hostkey
+    $ cap deploy 
