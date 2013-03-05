@@ -1,6 +1,18 @@
-I could not get my gem path to override deprec, so until this is fixed
+Dependencies:
 
-1.  I installed deprec in the RVM place, BUT
-1.a I replaced lib with a symlink
-1.b I remove deprec frm the rvm gem cache
+gem install capistrano
+gem install railsless-deploy
+gem install whenever
+
+To Install
+
+1.  remove any existing versions of deprec (sorry about that)
+
+2.  cd deprec 2.2.3
+
+3.  gem build deprec
+
+4.  gem build deprec.gemspec 
+
+5.  gem install deprec-2.4.gem 
 
