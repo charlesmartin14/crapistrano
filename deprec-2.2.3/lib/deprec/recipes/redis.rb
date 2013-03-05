@@ -33,12 +33,12 @@ Capistrano::Configuration.instance(:must_exist).load do
         deprec2.mkdir("/etc/redis", :via => :sudo)
         deprec2.mkdir("/etc/redis/#{redis_port}", :via => :sudo)
 
-        version = 'redis-2.6.89'
+        version = 'redis-2.6.10'
         set :src_package, {
         :file => version + '.tar.gz',
         :dir => version,
         :url => "http://redis.googlecode.com/files/#{version}.tar.gz",
-        :md5sum => "5093fb7c5f763e828c857daf260665bc",   
+        :md5sum => "711b472b14084863699987786a378d87",   
         :unpack => "tar zxf #{version}.tar.gz;",
         :make => 'make;',
         :configure => '',  # default is ./configure, not skip
