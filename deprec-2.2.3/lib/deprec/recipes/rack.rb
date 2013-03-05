@@ -44,8 +44,8 @@ Capistrano::Configuration.instance(:must_exist).load do
         gem2.install "trollop"  #
         gem2.install "whenever"  # not needed ? see deploy.rb?
         # start whenever?  when?
-     
-        
+
+
         # TODO:  make dir by hand and try update...was this the only problem?
         #
            # mkdir /var/www ?
