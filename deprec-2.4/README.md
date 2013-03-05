@@ -31,7 +31,7 @@ Installation
 
 Deprec can using rubygems[5].
 
-	sudo gem install deprec  # installs deprec and dependancies 
+	see README>.VIP above (chm) 
 	depify -c                # creates ~/.caprc which you may edit
 	cap -T                   # should list lots of deprec tasks
 

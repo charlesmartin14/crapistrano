@@ -55,6 +55,10 @@ require "#{File.dirname(__FILE__)}/recipes/lvm"
 require "#{File.dirname(__FILE__)}/recipes/vnstat"
 require "#{File.dirname(__FILE__)}/recipes/utils"
 
+# new -- maybe this should just be a gem?  not sure yet
+
+require "#{File.dirname(__FILE__)}/recipes/qless"
+
 
 
 # Retired recipes
