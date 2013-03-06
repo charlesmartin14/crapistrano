@@ -5,22 +5,24 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :deprec do
     namespace :qless do
 
-     
+     #  it is good to know how to deploy from a git repo...
+     # although this will be removed and replaced with a gem
 
+     # 5-mar-113  chm   in principle this should work,..but it does not !
+     
       desc "install qless"
       task :install do
       # for make test
         apt.install( {:base => %w(git)}, :stable )
 
-        deprec2.mkdir("git", :via => :sudo)
-
-        version = 'redis-2.6.10'
+       # deprec2.mkdir("/usr/local/src/qless", :via => :sudo)
+       #  where does this belong ?  how can i set up
+        version = '1.0s'
         set :src_package, {
-          :download_method => 'git',
-         :git => '',
-         :file => 'qless',
-         :dir => '1.0',
-         :url => "https://github.com/charlesmartin14",
+          :download_method => :git,
+         :file => '',
+         :dir => 'qless',
+         :url => "https://github.com/charlesmartin14/qless.git",
          :unpack => "",
          :make => '',
          :configure => '',  # default is ./configure, not skip

@@ -256,8 +256,11 @@ module Deprec2
         # ensure git is installed
         apt.install( {:base => %w(git-core)}, :stable) #TODO fix this to test ubuntu version <hardy might need specific git version for full git submodules support
         pkg_dir = File.join(src_dir, src_pkg[:dir])
-        run "if [ -d #{pkg_dir} ]; then cd #{pkg_dir} && #{sudo} git checkout master && #{sudo} git pull && #{sudo} git submodule init && #{sudo} git submodule update; else #{sudo} git clone #{src_pkg[:url]} #{pkg_dir} && cd #{pkg_dir} && #{sudo} git submodule init && #{sudo} git submodule update ; fi"
-      	# Checkout the revision wanted if defined
+        # 5-mar-13 chm   this just won't run ?!
+        run "if [ -d #{pkg_dir} ]; then cd #{pkg_dir} && #{sudo} git checkout master && #{sudo} git pull; else #{sudo} git clone #{src_pkg[:url]} #{pkg_dir}; fi"
+        run "cd #{pkg_dir} && #{sudo} 'git submodule init' && #{sudo} 'git submodule update'"
+
+	# Checkout the revision wanted if defined
       	if src_pkg[:version]
       	  run "cd #{pkg_dir} && git branch | grep '#{src_pkg[:version]}$' && #{sudo} git branch -D '#{src_pkg[:version]}'; exit 0"
       	  run "cd #{pkg_dir} && #{sudo} git checkout -b #{src_pkg[:version]} #{src_pkg[:version]}" 
